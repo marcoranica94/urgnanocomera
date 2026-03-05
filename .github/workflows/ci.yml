@@ -24,6 +24,13 @@ jobs:
       - name: Installa dipendenze
         run: npm ci
 
+      - name: Genera tipi Payload
+        env:
+          PAYLOAD_SECRET: ci-only-secret
+          DATABASE_URI: file:./data/ci-test.db
+          NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+        run: npm run generate:types && npm run generate:importmap
+
       - name: Lint
         run: npm run lint
 
@@ -32,7 +39,7 @@ jobs:
 
       - name: Build
         env:
-          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET || 'ci-only-secret' }}
+          PAYLOAD_SECRET: ci-only-secret
           DATABASE_URI: file:./data/ci-test.db
           NEXT_PUBLIC_SERVER_URL: http://localhost:3000
         run: npm run build
