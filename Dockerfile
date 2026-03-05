@@ -41,7 +41,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
+# PORT viene iniettata da Railway al runtime (non hardcodare)
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
