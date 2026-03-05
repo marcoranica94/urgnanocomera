@@ -9,8 +9,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "payload": "payload",
-    "generate:types": "TSX_TSCONFIG_PATH=./tsconfig.payload.json payload generate:types",
-    "generate:importmap": "TSX_TSCONFIG_PATH=./tsconfig.payload.json payload generate:importmap"
+    "generate:types": "NODE_OPTIONS=--import=tsx/esm payload generate:types",
+    "generate:importmap": "NODE_OPTIONS=--import=tsx/esm payload generate:importmap"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "^3.0.0",
