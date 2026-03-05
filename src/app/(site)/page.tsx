@@ -4,11 +4,13 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { HeroSlideshow } from '@/components/home/HeroSlideshow'
+
+export const dynamic = 'force-dynamic'
 import { AnimatedCounter } from '@/components/home/AnimatedCounter'
 import { PhotoCard } from '@/components/photo/PhotoCard'
 import { TestimonialCard } from '@/components/testimonial/TestimonialCard'
 
-export const revalidate = 3600
+export const revalidate = false
 
 // ─── Tipi minimi per i dati restituiti da Payload ─────────────────────────────
 

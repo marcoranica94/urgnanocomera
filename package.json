@@ -19,6 +19,7 @@
     "@payloadcms/richtext-lexical": "^3.0.0",
     "@payloadcms/ui": "^3.0.0",
     "@types/nodemailer": "^7.0.11",
+    "graphql": "^16.13.1",
     "leaflet": "^1.9.4",
     "next": "15.4.11",
     "next-themes": "^0.4.0",

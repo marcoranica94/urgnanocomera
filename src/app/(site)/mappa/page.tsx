@@ -1,27 +1,15 @@
 import type { Metadata } from 'next'
-import dynamic from 'next/dynamic'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { MapClient } from '@/components/map/MapClient'
 import type { LocationMarker } from '@/components/map/MapView'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Mappa interattiva',
   description: 'Esplora i luoghi storici di Urgnano sulla mappa. Fotografie e testimonianze georeferenziate.',
   openGraph: { title: 'Mappa interattiva — UrgnanoComEra' },
-}
-
-// Leaflet usa window → ssr: false obbligatorio
-const MapView = dynamic(
-  () => import('@/components/map/MapView').then(m => m.MapView),
-  { ssr: false, loading: () => <MapSkeleton /> },
-)
-
-function MapSkeleton() {
-  return (
-    <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-muted">
-      <p className="text-sm text-muted-foreground">Caricamento mappa…</p>
-    </div>
-  )
 }
 
 interface MediaDoc { url?: string | null }
@@ -99,7 +87,7 @@ export default async function MappaPage() {
 
   return (
     <div>
-      <MapView locations={locationMarkers} />
+      <MapClient locations={locationMarkers} />
     </div>
   )
 }

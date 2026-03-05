@@ -3,6 +3,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { ContribuisciForm } from '@/components/contribuisci/ContribuisciForm'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Contribuisci',
   description: 'Hai foto, video, audio o ricordi della storia di Urgnano? Condividili con la comunità.',

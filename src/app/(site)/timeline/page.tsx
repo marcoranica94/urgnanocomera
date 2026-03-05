@@ -4,7 +4,7 @@ import config from '@payload-config'
 import { TimelineView } from '@/components/timeline/TimelineView'
 import type { DecadeData, TimelineEvent } from '@/components/timeline/TimelineView'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Timeline storica',
