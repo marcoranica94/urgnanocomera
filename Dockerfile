@@ -6,7 +6,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+# --legacy-peer-deps: react-leaflet 4.x dichiara peer react@^18 ma funziona con React 19
+RUN npm ci --legacy-peer-deps
 
 # ─── Build ───────────────────────────────────────────────────────────────────
 FROM base AS builder
