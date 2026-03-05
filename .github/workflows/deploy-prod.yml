@@ -1,0 +1,62 @@
+name: Deploy Produzione
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy su produzione
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installa dipendenze
+        run: npm ci
+
+      - name: Build
+        env:
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          DATABASE_URI: ${{ secrets.DATABASE_URI }}
+          NEXT_PUBLIC_SERVER_URL: ${{ secrets.PRODUCTION_URL }}
+        run: npm run build
+
+      # ── Fase A: Deploy su Railway produzione ──────────────────────────────
+      # Fase B: sostituire con deploy SSH su VPS o Fly.io
+      - name: Installa Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy su Railway (produzione)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PROD }}
+        run: railway up --service urgnanocomera-prod --detach
+
+      - name: Notifica deploy completato
+        run: echo "Produzione aggiornata su ${{ secrets.PRODUCTION_URL }}"
+
+  # ── Fase B: deploy SSH su VPS ─────────────────────────────────────────────
+  # Decommentare quando si migra a VPS con dominio reale
+  # deploy-vps:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Deploy via SSH
+  #       uses: appleboy/ssh-action@v1
+  #       with:
+  #         host: ${{ secrets.VPS_HOST }}
+  #         username: ${{ secrets.VPS_USER }}
+  #         key: ${{ secrets.VPS_SSH_KEY }}
+  #         script: |
+  #           cd /srv/urgnanocomera
+  #           git pull origin main
+  #           docker compose pull
+  #           docker compose up -d --build

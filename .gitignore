@@ -1,0 +1,38 @@
+# Dipendenze
+node_modules/
+.pnp
+.pnp.js
+
+# Build
+.next/
+out/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dati locali (Fase A: SQLite + media upload)
+data/
+public/media/
+
+# Payload CMS generated
+src/payload-types.ts
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test
+coverage/
+
+# Logs
+*.log
+npm-debug.log*

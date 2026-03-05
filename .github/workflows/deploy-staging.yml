@@ -1,0 +1,44 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    name: Deploy su staging (Railway)
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installa dipendenze
+        run: npm ci
+
+      - name: Build
+        env:
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          DATABASE_URI: ${{ secrets.DATABASE_URI }}
+          NEXT_PUBLIC_SERVER_URL: ${{ secrets.STAGING_URL }}
+        run: npm run build
+
+      # ── Deploy su Railway ──────────────────────────────────────────────────
+      # Railway CLI legge RAILWAY_TOKEN dai secrets e fa il deploy automatico
+      - name: Installa Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy su Railway (staging)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+        run: railway up --service urgnanocomera-staging --detach
+
+      - name: Notifica deploy completato
+        run: echo "Staging aggiornato su ${{ secrets.STAGING_URL }}"

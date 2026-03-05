@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PAYLOAD_SECRET=${PAYLOAD_SECRET}
+      - DATABASE_URI=${DATABASE_URI:-file:/app/data/urgnanocomera.db}
+      - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL:-http://localhost:3000}
+    volumes:
+      # Fase A: persistenza SQLite e media su disco locale
+      - ./data:/app/data
+      - ./public/media:/app/public/media
+    restart: unless-stopped
+
+# Fase B: aggiungere servizio postgresql quando si migra
+# postgres:
+#   image: postgres:16-alpine
+#   environment:
+#     POSTGRES_DB: urgnanocomera
+#     POSTGRES_USER: ${POSTGRES_USER}
+#     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#   volumes:
+#     - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  # Fase B: decommentare
+  # postgres_data:
