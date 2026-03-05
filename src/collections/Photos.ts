@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { indexPhoto, deletePhotoFromIndex } from '../lib/meilisearch.js'
+import { indexPhoto, deletePhotoFromIndex } from '../lib/meilisearch.ts'
 
 export const Photos: CollectionConfig = {
   slug: 'photos',

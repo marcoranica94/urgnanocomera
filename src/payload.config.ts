@@ -5,15 +5,15 @@ import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 // Collections
-import { Photos } from './collections/Photos.js'
-import { Testimonials } from './collections/Testimonials.js'
-import { Locations } from './collections/Locations.js'
-import { Stories } from './collections/Stories.js'
-import { TimelineEvents } from './collections/TimelineEvents.js'
-import { Contributions } from './collections/Contributions.js'
-import { Comments } from './collections/Comments.js'
-import { Users } from './collections/Users.js'
-import { Media } from './collections/Media.js'
+import { Photos } from './collections/Photos.ts'
+import { Testimonials } from './collections/Testimonials.ts'
+import { Locations } from './collections/Locations.ts'
+import { Stories } from './collections/Stories.ts'
+import { TimelineEvents } from './collections/TimelineEvents.ts'
+import { Contributions } from './collections/Contributions.ts'
+import { Comments } from './collections/Comments.ts'
+import { Users } from './collections/Users.ts'
+import { Media } from './collections/Media.ts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
