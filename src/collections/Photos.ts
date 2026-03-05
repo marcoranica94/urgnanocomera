@@ -1,7 +1,16 @@
 import type { CollectionConfig } from 'payload'
+import { indexPhoto, deletePhotoFromIndex } from '@/lib/meilisearch'
 
 export const Photos: CollectionConfig = {
   slug: 'photos',
+  hooks: {
+    afterChange: [
+      async ({ doc }) => { await indexPhoto(doc) },
+    ],
+    afterDelete: [
+      async ({ id }) => { await deletePhotoFromIndex(id) },
+    ],
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'year', 'location', 'status'],
