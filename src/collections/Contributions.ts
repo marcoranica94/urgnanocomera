@@ -1,4 +1,5 @@
-import type {CollectionConfig} from 'payload'
+import type { CollectionConfig } from 'payload'
+import { sendContributionStatusUpdate } from '@/lib/email'
 
 export const Contributions: CollectionConfig = {
   slug: 'contributions',
@@ -88,4 +89,27 @@ export const Contributions: CollectionConfig = {
     },
   ],
   timestamps: true,
+
+  hooks: {
+    // Notifica al cittadino quando lo stato cambia da pending a approved/rejected
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        const prev = previousDoc?.status
+        const curr = doc?.status
+
+        if (prev === 'pending' && (curr === 'approved' || curr === 'rejected')) {
+          const email = doc.submitterEmail as string | undefined
+          const name = doc.submitterName as string | undefined
+          if (email && name) {
+            await sendContributionStatusUpdate(
+              email,
+              name,
+              curr,
+              doc.moderationNote as string | null | undefined,
+            )
+          }
+        }
+      },
+    ],
+  },
 }

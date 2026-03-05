@@ -57,6 +57,12 @@ export const Stories: CollectionConfig = {
       fields: [{ name: 'tag', type: 'text' }],
     },
     {
+      name: 'featured',
+      type: 'checkbox',
+      label: 'Storia del mese (in evidenza in homepage)',
+      defaultValue: false,
+    },
+    {
       name: 'status',
       type: 'select',
       label: 'Stato',

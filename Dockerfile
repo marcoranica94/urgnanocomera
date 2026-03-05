@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 # ─── Dipendenze ──────────────────────────────────────────────────────────────
 FROM base AS deps
@@ -6,7 +6,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+# --legacy-peer-deps: react-leaflet 4.x dichiara peer react@^18 ma funziona con React 19
+RUN npm ci --legacy-peer-deps
 
 # ─── Build ───────────────────────────────────────────────────────────────────
 FROM base AS builder
@@ -28,9 +29,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Crea cartelle per dati persistenti (Fase A: SQLite + media)
-RUN mkdir -p /app/data /app/public/media && \
-    chown -R nextjs:nodejs /app/data /app/public/media
+# Crea cartella dati persistenti (unico volume Railway: /app/data)
+# Fase A: SQLite in /app/data/urgnanocomera.db, media in /app/data/media
+RUN mkdir -p /app/data/media && \
+    chown -R nextjs:nodejs /app/data
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -40,7 +42,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
+# PORT viene iniettata da Railway al runtime (non hardcodare)
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]

@@ -1,44 +1,29 @@
 name: Deploy Staging
 
+# Railway ascolta direttamente il branch 'develop' via GitHub Integration.
+# Questo workflow verifica che il sito staging risponda dopo ogni deploy.
+
 on:
   push:
     branches: [develop]
 
 jobs:
-  deploy:
-    name: Deploy su staging (Railway)
+  healthcheck:
+    name: Health check staging
     runs-on: ubuntu-latest
-    environment: staging
+    # Attende che Railway finisca il deploy (solitamente 2-4 min)
+    if: ${{ vars.STAGING_URL != '' }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Attendi deploy Railway
+        run: sleep 180
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Installa dipendenze
-        run: npm ci
-
-      - name: Build
-        env:
-          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
-          DATABASE_URI: ${{ secrets.DATABASE_URI }}
-          NEXT_PUBLIC_SERVER_URL: ${{ secrets.STAGING_URL }}
-        run: npm run build
-
-      # ── Deploy su Railway ──────────────────────────────────────────────────
-      # Railway CLI legge RAILWAY_TOKEN dai secrets e fa il deploy automatico
-      - name: Installa Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy su Railway (staging)
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-        run: railway up --service urgnanocomera-staging --detach
-
-      - name: Notifica deploy completato
-        run: echo "Staging aggiornato su ${{ secrets.STAGING_URL }}"
+      - name: Verifica risposta HTTP
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ vars.STAGING_URL }}")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "Staging non risponde correttamente (HTTP $STATUS)"
+            exit 1
+          fi
+          echo "Staging online: ${{ vars.STAGING_URL }}"
