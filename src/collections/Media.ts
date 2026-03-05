@@ -4,9 +4,13 @@ import path from 'path'
 export const Media: CollectionConfig = {
   slug: 'media',
   upload: {
-    // Fase A: salva nella cartella public/media (servita da Next.js staticamente)
-    // Fase B: sostituire con storage Cloudflare R2 via @payloadcms/storage-s3
-    staticDir: path.resolve('./public/media'),
+    // Fase A: disco locale.
+    //   - Locale (dev): ./public/media  → servita da Next.js
+    //   - Railway:      /app/data/media → servita da Payload (unico volume /app/data)
+    // Fase B: sostituire con @payloadcms/storage-s3 per Cloudflare R2
+    staticDir: process.env.PAYLOAD_MEDIA_DIR
+      ? path.resolve(process.env.PAYLOAD_MEDIA_DIR)
+      : path.resolve('./public/media'),
     mimeTypes: ['image/*', 'video/*', 'audio/*'],
     imageSizes: [
       { name: 'thumbnail', width: 400, height: 300, position: 'centre' },

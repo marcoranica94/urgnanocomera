@@ -28,9 +28,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Crea cartelle per dati persistenti (Fase A: SQLite + media)
-RUN mkdir -p /app/data /app/public/media && \
-    chown -R nextjs:nodejs /app/data /app/public/media
+# Crea cartella dati persistenti (unico volume Railway: /app/data)
+# Fase A: SQLite in /app/data/urgnanocomera.db, media in /app/data/media
+RUN mkdir -p /app/data/media && \
+    chown -R nextjs:nodejs /app/data
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

@@ -11,9 +11,8 @@ services:
       - DATABASE_URI=${DATABASE_URI:-file:/app/data/urgnanocomera.db}
       - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL:-http://localhost:3000}
     volumes:
-      # Fase A: persistenza SQLite e media su disco locale
+      # Fase A: unico volume per SQLite e media (specchia Railway)
       - ./data:/app/data
-      - ./public/media:/app/public/media
     restart: unless-stopped
 
 # Fase B: aggiungere servizio postgresql quando si migra
