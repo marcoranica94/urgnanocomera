@@ -3,6 +3,7 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  serverExternalPackages: ['libsql', '@libsql/client', '@libsql/linux-x64-musl'],
   images: {
     // Fase A: immagini servite localmente
     // Fase B: aggiungere il dominio Cloudflare R2
