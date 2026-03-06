@@ -26,7 +26,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs && \
+# su-exec per droppare da root a nextjs dopo aver fixato i permessi del volume
+RUN apk add --no-cache su-exec && \
+    addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 # Crea cartella dati persistenti (unico volume Railway: /app/data)
@@ -42,11 +44,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/node_modules/@libsql ./node_modules/@libsql
 COPY --from=builder /app/node_modules/libsql ./node_modules/libsql
 
-USER nextjs
+# Entrypoint: fixa permessi volume a runtime, poi droppa a nextjs
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 3000
 
 # PORT viene iniettata da Railway al runtime (non hardcodare)
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Avvio come root; l'entrypoint fa chown e poi esegue come nextjs
+CMD ["/app/docker-entrypoint.sh"]
