@@ -49,7 +49,11 @@ export default buildConfig({
   // Fase B: sostituire con @payloadcms/db-postgres e DATABASE_URI
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URI ?? `file:${path.join(dirname, '../data/urgnanocomera.db')}`,
+      url: process.env.DATABASE_URI ?? (
+        process.env.NODE_ENV === 'production'
+          ? 'file:/app/data/urgnanocomera.db'
+          : `file:${path.join(dirname, '../data/urgnanocomera.db')}`
+      ),
     },
   }),
 
