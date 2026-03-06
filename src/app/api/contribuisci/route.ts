@@ -107,7 +107,8 @@ export async function POST(req: NextRequest) {
 
     await payload.create({
       collection: 'contributions',
-      data: contributionData as Parameters<typeof payload.create>[0]['data'],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: contributionData as any,
     })
 
     // ── Email ──────────────────────────────────────────────────────────────
