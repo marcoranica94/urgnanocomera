@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { migrations } from './migrations'
 
 // Collections
 import { Photos } from './collections/Photos.ts'
@@ -55,6 +56,7 @@ export default buildConfig({
           : `file:${path.join(dirname, '../data/urgnanocomera.db')}`
       ),
     },
+    prodMigrations: migrations,
   }),
 
   // ─── Upload media ─────────────────────────────────────────────
